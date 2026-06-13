@@ -1,0 +1,60 @@
+name: ubuntu-sponsoring
+type: charm
+title: Ubuntu Sponsoring charm
+summary: Generate and publish the Ubuntu sponsoring report
+description: |
+  **Ubuntu Sponsoring Operator** is a [charm](https://juju.is/charms-architecture)
+  that generates the Ubuntu sponsoring report on a schedule from a Launchpad
+  checkout and publishes the generated static reports on a web endpoint.
+
+links:
+  website:
+    - https://charmhub.io/ubuntu-sponsoring
+  issues:
+    - https://github.com/canonical/ubuntu-sponsoring-operator/issues
+  source:
+    - https://github.com/canonical/ubuntu-sponsoring-operator
+
+base: ubuntu@24.04
+platforms:
+  amd64:
+
+parts:
+  ubuntu-sponsoring-charm:
+    source: .
+    plugin: uv
+    build-packages: [git]
+    build-snaps: [astral-uv]
+    override-build: |
+      craftctl default  # Run the default build steps.
+      git describe --always > $CRAFT_PART_INSTALL/version
+
+charm-libs:
+  - lib: traefik_k8s.ingress
+    version: "2"
+
+actions:
+  sync-now:
+    description: |
+      Trigger an immediate run of the sponsoring report generation.
+
+requires:
+  ingress:
+    interface: ingress
+    limit: 1
+    optional: true
+
+config:
+  options:
+    lpuser_secret_id:
+      description: |
+        The secret ID for a vault containing the Launchpad credentials
+        under key lpoauthkey, to be used for authenticated report generation.
+        When unset, the report is generated using an anonymous Launchpad login.
+      type: secret
+    sync_interval:
+      description: |
+        How often the sponsoring report is regenerated, in minutes. For example
+        15 runs every 15 minutes and 60 runs hourly.
+      type: int
+      default: 15

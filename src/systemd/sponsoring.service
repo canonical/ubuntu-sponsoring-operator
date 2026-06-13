@@ -1,0 +1,22 @@
+[Unit]
+Description=Ubuntu Sponsoring - Generate sponsoring report
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+Environment="HOME=/home/ubuntu"
+Environment="CRED_DIR=/home/ubuntu/.config/ubuntu-sponsoring"
+Environment="XDG_CACHE_HOME=/home/ubuntu/.cache"
+
+User=ubuntu
+NoNewPrivileges=true
+PrivateTmp=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+RestrictSUIDSGID=yes
+
+TimeoutStartSec=3600
+ExecStart=run-sponsoring

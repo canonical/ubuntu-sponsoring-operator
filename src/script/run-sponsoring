@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+export PYTHONPATH=/srv/sponsoring/checkout
+
+exec python3 -m ubuntu_sponsoring.sponsors_page -v --output-dir /srv/sponsoring/www __SPONSORING_ARGS__

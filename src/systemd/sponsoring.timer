@@ -1,0 +1,11 @@
+[Unit]
+Description=Ubuntu Sponsoring - Scheduled report generation
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=__SYNC_INTERVAL__
+Persistent=true
+RandomizedDelaySec=30
+
+[Install]
+WantedBy=timers.target
